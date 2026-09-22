@@ -36,3 +36,86 @@ The AI proposed the following minimal patch:
 ```diff
 - if (years > 5) {
 + if (years >= 5) {
+
+### Verification
+
+The patch was applied and verified using `make test`.
+
+Result: 10 tests successful, 0 tests failed.
+
+The fix resolved the original `quotesDiscountForLoyalCustomer` failure
+without causing any regression in the other tests.
+
+## Session 4B – Reducing Cyclomatic Complexity
+
+### Part A – Refactor Target Ranking
+
+### Initial Complexity
+
+Manual estimate: approximately 18–19, depending on whether the
+compound `&&` condition is counted separately.
+
+PMD was not available because the provided Makefile does not contain
+a `pmd` target.
+
+### AI Ranking
+
+1. `quote`
+   - Current cyclomatic complexity: approximately 18–19
+   - First refactor: `extract-method`
+   - Target: loyalty-tier calculation block
+   - Expected reduction: approximately 3 decision points in `quote`
+
+`PriceEngine` contains only one method, so there were no other methods
+to rank.
+
+## Part B – Extract Method Refactor
+
+### Selected Refactor
+
+The loyalty-tier discount calculation was selected for extraction.
+
+### AI Proposed Refactor
+
+The AI extracted the loyalty-tier discount calculation and application
+into the private helper method `applyLoyaltyDiscount(...)`.
+
+The public method signature of `quote(Order, Customer)` was unchanged.
+
+### Refactor Review
+
+The refactor preserves the existing loyalty-tier conditions and
+discount arithmetic. The fixed `years >= 5` condition remains unchanged.
+No public method signatures were changed, and no early returns were
+introduced or moved.
+
+### Verification
+
+The refactored code was compiled and tested using `make test`.
+
+Result: 10 tests successful, 0 tests failed.
+
+The refactor did not introduce any regression.
+
+## Part D – Reflection
+
+### Complexity
+
+The original `quote` method was estimated at approximately 18–19
+cyclomatic complexity. After extracting the loyalty-tier discount
+block, the main `quote` method has fewer decision points while the
+behavior remains unchanged.
+
+PMD was not available because the provided Makefile does not contain
+a `pmd` target, so the complexity reduction was not measured using PMD.
+
+### SpotBugs
+
+SpotBugs was not run because the provided Makefile does not contain
+a SpotBugs target.
+
+### Rejected Refactor
+
+The AI ranking identified `extract-method` as the first refactor move
+for `quote`. No alternative refactor was proposed in the ranking, so
+I did not reject an AI-proposed refactor during this task.
